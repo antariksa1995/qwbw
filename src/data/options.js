@@ -18,7 +18,8 @@ export const selectableFontTypes = {
 	5: { id: 5, type: 'Indopak / Nastaleeq', font: 'Uthman Taha Digital Font', apiId: 5, displayOrder: 7, disallowedIn: ['mushaf'] },
 	6: { id: 6, type: 'Indopak / Nastaleeq', font: 'Qalam Digital Font (Hanafi Edition)', apiId: 6, displayOrder: 6, disallowedIn: ['mushaf'] },
 	7: { id: 7, type: 'Uthmanic', font: 'Digital Bold Font', apiId: 1, displayOrder: 2, disallowedIn: ['mushaf'] },
-	8: { id: 8, type: 'Indopak / Nastaleeq', font: 'Uthman Taha Digital Bold Font', apiId: 5, displayOrder: 8, disallowedIn: ['mushaf'] }
+	8: { id: 8, type: 'Indopak / Nastaleeq', font: 'Uthman Taha Digital Bold Font', apiId: 5, displayOrder: 8, disallowedIn: ['mushaf'] },
+	9: { id: 9, type: 'Indopak / Nastaleeq', font: 'Indonesian Standar Mushaf', apiId: 7, displayOrder: 9, disallowedIn: ['mushaf'] }
 };
 
 export const themeColors = ['light', 'dark'];

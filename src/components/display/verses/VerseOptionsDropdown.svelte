@@ -179,7 +179,7 @@
 			</DropdownItem>
 
 			<!-- copy verse button (only for non-mushaf fonts) -->
-			{#if ![2, 3].includes($__fontType)}
+			{#if ![2, 3, 9].includes($__fontType)}
 				<DropdownItem
 					class={dropdownItemClasses}
 					on:click={() => {

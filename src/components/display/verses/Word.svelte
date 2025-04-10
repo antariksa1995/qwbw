@@ -71,7 +71,7 @@
 	<div id={wordKey} class={wordDivClasses} on:click={() => wordClickHandler({ key: wordKey, type: 'word' })}>
 		<span class={wordSpanClasses} data-fontSize={fontSizes.arabicText}>
 			<!-- Everything except Mushaf fonts -->
-			{#if ![2, 3].includes($__fontType)}
+			{#if ![2, 3, 9].includes($__fontType)}
 				{arabicSplit[word]}
 				<!-- Mushaf fonts -->
 			{:else}

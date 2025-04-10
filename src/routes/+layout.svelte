@@ -95,7 +95,7 @@
 	$: if ($__currentPage === 'mushaf') {
 		$__displayType = 6;
 		// We do not need Uthmani digital and Indopak fonts in mushaf page
-		if (![2, 3].includes($__fontType)) {
+		if (![2, 3, 9].includes($__fontType)) {
 			__fontType.set(2);
 		}
 	} else {

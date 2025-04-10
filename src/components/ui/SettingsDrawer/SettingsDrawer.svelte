@@ -286,7 +286,7 @@
 						<p class={settingsDescriptionClasses}>Multiple Quranic fonts to choose from depending on your mushaf or region preference.</p>
 
 						<!-- note for Firefox users on Apple devices -->
-						{#if [2, 3].includes($__fontType)}
+						{#if [2, 3, 9].includes($__fontType)}
 							{#if (isIOS && isFirefox) || (isMac && isFirefox)}
 								<p class={settingsDescriptionClasses}><span class="font-semibold">Important Note: </span>The Mushaf fonts you have selected may not be fully compatible with Firefox on Apple devices. For the best experience, please use Safari or Chrome.</p>
 							{/if}

@@ -66,7 +66,7 @@
 		if ([1, 3].includes(textType)) params.mushaf = fontType;
 
 		// Append translation param if translation was selected
-		if ([2, 3].includes(textType)) params.translations = $__verseTranslations.toString();
+		if ([2, 3, 9].includes(textType)) params.translations = $__verseTranslations.toString();
 
 		const api = `https://quran.com/api/proxy/content/api/qdc/verses/advanced_copy?` + new URLSearchParams(params);
 		const response = await fetch(api);
