@@ -201,7 +201,8 @@ svg {
 .arabic-font-4,
 .arabic-font-5,
 .arabic-font-6,
-.arabic-font-7 {
+.arabic-font-7,
+.arabic-font-9 {
   direction: rtl;
 }
 
