@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import { quranMetaData } from '$data/quranMeta';
 import { __reciter, __translationReciter, __playbackSpeed, __audioSettings, __audioModalVisible, __currentPage, __chapterNumber, __timestampData, __keysToFetch } from '$utils/stores';
-import { wordsAudioURL } from '$data/websiteSettings';
+import { wordsAudioURL, alternateWordsAudioURL } from '$data/websiteSettings';
 import { selectableReciters, selectableTranslationReciters, selectablePlaybackSpeeds, selectableAudioDelays } from '$data/options';
 import { fetchTimestampData } from '$utils/fetchData';
 import { scrollSmoothly } from '$utils/scrollSmoothly';
@@ -117,10 +117,12 @@ export function playWordAudio(props) {
 	const nextWordFileName = `${wordChapter}/${String(wordChapter).padStart(3, '0')}_${String(wordVerse).padStart(3, '0')}_${String(wordNumber + 1).padStart(3, '0')}.mp3`;
 	const currentAudioType = audioSettings.audioType;
 
-	// Prefetch the next word audio
-	fetch(`${wordsAudioURL}/${nextWordFileName}?version=2`);
+	// word keys in which play the word audio using the alternate audio link
+	const wordKeysForAlternateAudio = ['4:110:1', '4:110:2', '4:110:3', '4:110:4', '68:31:5'];
+	const isAlternate = wordKeysForAlternateAudio.includes(props.key);
+	const selectedAudioURL = isAlternate ? alternateWordsAudioURL : wordsAudioURL;
 
-	audio.src = `${wordsAudioURL}/${currentWordFileName}?version=2`;
+	audio.src = `${selectedAudioURL}/${currentWordFileName}?version=2`;
 	audio.currentTime = 0;
 	audio.load();
 	audio.playbackRate = selectablePlaybackSpeeds[get(__playbackSpeed)].speed;
@@ -130,6 +132,9 @@ export function playWordAudio(props) {
 	audioSettings.audioType = 'word';
 	audioSettings.playingKey = `${wordChapter}:${wordVerse}`;
 	audioSettings.playingWordKey = `${props.key}`;
+
+	// Prefetch the next word audio
+	fetch(`${wordsAudioURL}/${nextWordFileName}?version=2`);
 
 	// For debugging purposes, needs not be removed
 	console.log('playing word', '-', audioSettings.playingWordKey);
