@@ -60,7 +60,9 @@
 		showMessage('Starting download...');
 		abortController = new AbortController();
 
-		await db.api_data.clear(); // Clear old cached data
+		// Clear old cached data
+		await db.chapter_data.clear();
+		await db.translation_data.clear();
 
 		const totalChapters = 114;
 		let completed = 0;
@@ -117,7 +119,10 @@
 	// Deletes all stored data from IndexedDB and resets settings.
 	async function deleteApiDataTable() {
 		try {
-			await db.api_data.clear(); // Clear the database
+			// Clear old cached data
+			await db.chapter_data.clear();
+			await db.translation_data.clear();
+
 			showMessage('Data deleted!');
 			downloadStopped = false;
 
