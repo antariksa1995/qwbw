@@ -6,14 +6,11 @@ let __websiteOnline,
 	__chapterNumber,
 	__pageNumber,
 	__chapterData,
-	__chapterDataLoaded,
 	__verseTranslationData,
-	__notesData,
 	__verseKey,
 	__userSettings,
 	__userNotes,
 	__userBookmarks,
-	__userToken,
 	__fontType,
 	__wordTranslation,
 	__wordTransliteration,
@@ -23,7 +20,6 @@ let __websiteOnline,
 	__wordTransliterationEnabled,
 	__reciter,
 	__translationReciter,
-	__timestampData,
 	__playbackSpeed,
 	__displayType,
 	__websiteTheme,
@@ -44,13 +40,11 @@ let __websiteOnline,
 	__audioModalVisible,
 	__notesModalVisible,
 	__tajweedRulesModalVisible,
-	__tokenModalVisible,
 	__tafsirModalVisible,
 	__quranNavigationModalVisible,
 	__siteNavigationModalVisible,
 	__settingsSelectorModal,
 	__lexiconModalVisible,
-	__changelogModalVisible,
 	__verseTranslationModalVisible,
 	__morphologyModalVisible,
 	__copyShareVerseModalVisible,
@@ -65,7 +59,6 @@ let __websiteOnline,
 	__playButtonsFunctionality,
 	__mushafMinimalModeEnabled,
 	__keysToFetch,
-	__keysToFetchData,
 	__wordMorphologyOnClick,
 	__homepageExtrasPanelVisible;
 
@@ -84,17 +77,11 @@ if (browser) {
 	// to store the page number
 	__pageNumber = writable(1);
 
-	// to store the chapter data fetched from the API
+	// to store the chapter data fetched from the CDN
 	__chapterData = writable(null);
 
 	// to store the verse translation data fetch from Quran.com's API
 	__verseTranslationData = writable(null);
-
-	// to store the boolean value of the complete chapter data load
-	__chapterDataLoaded = writable(null);
-
-	// to store the user notes data fetched from the API
-	__notesData = writable(null);
 
 	// to store the verse key
 	__verseKey = writable('1:1');
@@ -107,9 +94,6 @@ if (browser) {
 
 	// to store the user bookmarks
 	__userBookmarks = writable(userSettings.userBookmarks);
-
-	// to store the token
-	__userToken = writable(localStorage.getItem('userToken'));
 
 	// to store the font type - Uthmani, IndoPak, etc...
 	__fontType = writable(userSettings.displaySettings.fontType);
@@ -135,9 +119,6 @@ if (browser) {
 	// to store reciter
 	__reciter = writable(userSettings.audioSettings.reciter);
 	__translationReciter = writable(userSettings.audioSettings.translationReciter);
-
-	// to store the word timestamp data fetched from the API
-	__timestampData = writable(null);
 
 	// to store playback speed
 	__playbackSpeed = writable(userSettings.audioSettings.playbackSpeed);
@@ -191,7 +172,6 @@ if (browser) {
 	__audioModalVisible = writable(false);
 	__notesModalVisible = writable(false);
 	__tajweedRulesModalVisible = writable(false);
-	__tokenModalVisible = writable(false);
 	__tafsirModalVisible = writable(false);
 	__quranNavigationModalVisible = writable(false);
 	__siteNavigationModalVisible = writable(false);
@@ -199,7 +179,6 @@ if (browser) {
 		visible: false
 	});
 	__lexiconModalVisible = writable(false);
-	__changelogModalVisible = writable(false);
 	__verseTranslationModalVisible = writable(false);
 	__morphologyModalVisible = writable(false);
 	__copyShareVerseModalVisible = writable(false);
@@ -239,9 +218,6 @@ if (browser) {
 	// storing the total keys to fetch by Individual component
 	__keysToFetch = writable(null);
 
-	// storing the keys data fetched by Individual component
-	__keysToFetchData = writable({});
-
 	// what happens when a user clicks on a word
 	__wordMorphologyOnClick = writable(userSettings.displaySettings.wordMorphologyOnClick);
 
@@ -255,14 +231,11 @@ export {
 	__chapterNumber,
 	__pageNumber,
 	__chapterData,
-	__chapterDataLoaded,
 	__verseTranslationData,
-	__notesData,
 	__verseKey,
 	__userSettings,
 	__userNotes,
 	__userBookmarks,
-	__userToken,
 	__fontType,
 	__wordTranslation,
 	__wordTransliteration,
@@ -272,7 +245,6 @@ export {
 	__wordTransliterationEnabled,
 	__reciter,
 	__translationReciter,
-	__timestampData,
 	__playbackSpeed,
 	__displayType,
 	__websiteTheme,
@@ -293,13 +265,11 @@ export {
 	__audioModalVisible,
 	__notesModalVisible,
 	__tajweedRulesModalVisible,
-	__tokenModalVisible,
 	__tafsirModalVisible,
 	__quranNavigationModalVisible,
 	__siteNavigationModalVisible,
 	__settingsSelectorModal,
 	__lexiconModalVisible,
-	__changelogModalVisible,
 	__verseTranslationModalVisible,
 	__morphologyModalVisible,
 	__copyShareVerseModalVisible,
@@ -314,7 +284,6 @@ export {
 	__playButtonsFunctionality,
 	__mushafMinimalModeEnabled,
 	__keysToFetch,
-	__keysToFetchData,
 	__wordMorphologyOnClick,
 	__homepageExtrasPanelVisible
 };

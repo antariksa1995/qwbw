@@ -1,12 +1,12 @@
 <script>
-	export let startIndex, endIndex;
+	export let keys, startIndex, endIndex;
 
 	import Spinner from '$svgs/Spinner.svelte';
 	import WordByWord from '$display/layouts/WordByWord.svelte';
 	import Normal from '$display/layouts/Normal.svelte';
 	import TranslationTransliteration from '$display/layouts/TranslationTransliteration.svelte';
-	import Bismillah from '$display/Bismillah.svelte';
-	import { __displayType, __fontType, __wordTranslation, __wordTransliteration, __keysToFetch, __keysToFetchData, __currentPage, __pageURL, __userSettings } from '$utils/stores';
+	import Bismillah from '$misc/Bismillah.svelte';
+	import { __displayType, __fontType, __wordTranslation, __wordTransliteration, __currentPage, __keysToFetch, __pageURL } from '$utils/stores';
 	import { buttonClasses } from '$data/commonClasses';
 	import { fetchChapterData } from '$utils/fetchData';
 	import { isValidVerseKey } from '$utils/validateKey';
@@ -15,6 +15,9 @@
 	import { term } from '$utils/terminologies';
 	import { selectableDisplays } from '$data/options';
 	import { quranMetaData } from '$data/quranMeta';
+
+	// set this so we can use it for the 'setPlayFromHere' functionality in the audio modal
+	$: $__keysToFetch = keys;
 
 	const dividerClasses = `
 		flex flex-row justify-center text-center mx-auto w-full my-4 
@@ -41,8 +44,9 @@
 	let Individual; // for the "Individual" component
 	let nextVersesProps = {};
 	let versesLoadType; // previous/next
-	let keysArray = $__keysToFetch.split(',');
+	let keysArray = keys.split(',');
 	let keysArrayLength = keysArray.length - 1;
+	let keysData = {};
 	let nextStartIndex, nextEndIndex;
 	let renderedVerses = 0;
 	let showLoadPreviousVerseButton = false;
@@ -52,7 +56,7 @@
 	let isLoading = false; // Tracks the loading state of dataMap
 
 	// Only allow display types listed in displayComponents, else default to type 1, and don't save the layout in settings if not allowed
-	$: if (!displayComponents.hasOwnProperty($__displayType)) {
+	$: if (!Object.prototype.hasOwnProperty.call(displayComponents, $__displayType)) {
 		$__displayType = 1;
 	}
 
@@ -74,7 +78,7 @@
 				if (startIndex > 0) showLoadPreviousVerseButton = true;
 			}
 		} catch (error) {
-			// ...
+			console.warn(error);
 		}
 	}
 
@@ -87,27 +91,28 @@
 
 	function loadNextVerses() {
 		try {
-			import('./Individual.svelte').then((res) => (Individual = res.default));
+			import('./FullVersesDisplay.svelte').then((res) => (Individual = res.default));
 			const lastRenderedId = document.querySelectorAll('.verse')[document.querySelectorAll('.verse').length - 1].id;
 
-			nextStartIndex = findKeyIndices($__keysToFetch, lastRenderedId, maxIndexesAllowedToRender).startIndex;
-			nextEndIndex = findKeyIndices($__keysToFetch, lastRenderedId, maxIndexesAllowedToRender).endIndex;
+			nextStartIndex = findKeyIndices(keys, lastRenderedId, maxIndexesAllowedToRender).startIndex;
+			nextEndIndex = findKeyIndices(keys, lastRenderedId, maxIndexesAllowedToRender).endIndex;
 
 			// don't let the end index be more than the data object's length
-			if (nextEndIndex === -1) nextEndIndex = Object.keys($__keysToFetch).length;
+			if (nextEndIndex === -1) nextEndIndex = Object.keys(keys).length;
 
 			// Remove the existing button
 			document.getElementById('loadVersesButton').remove();
 
 			// Setting the nextVersesProps
 			nextVersesProps = {
+				keys,
 				startIndex: nextStartIndex,
 				endIndex: nextEndIndex
 			};
 
 			versesLoadType = 'next';
 		} catch (error) {
-			console.log(error);
+			console.warn(error);
 		}
 	}
 
@@ -129,7 +134,7 @@
 		return { startIndex, endIndex };
 	}
 
-	function getIndexOfKey(key, keysString = $__keysToFetch) {
+	function getIndexOfKey(key, keysString = keys) {
 		const keysArray = keysString.split(',');
 		let index = keysArray.indexOf(key);
 		if (index === -1) index = 0;
@@ -155,7 +160,7 @@
 	 * This function:
 	 * 1. Extracts the relevant verse keys from `keysArray` using `startIndex` and `endIndex`.
 	 * 2. Identifies unique chapter numbers from those keys.
-	 * 3. Checks if data for each chapter is already cached in `__keysToFetchData`.
+	 * 3. Checks if data for each chapter is already cached in `keysData`.
 	 *    - If cached, uses the cached data.
 	 *    - If not, fetches the chapter data using `fetchChapterData`.
 	 * 4. Resolves all chapter data fetches in parallel.
@@ -174,8 +179,8 @@
 			// Step 2: Build fetch promises for only uncached chapters
 			const chapterFetchPromises = {};
 			for (const chapter of uniqueChapters) {
-				if (__keysToFetchData.hasOwnProperty(chapter)) {
-					chapterFetchPromises[chapter] = __keysToFetchData[chapter];
+				if (Object.prototype.hasOwnProperty.call(keysData, chapter)) {
+					chapterFetchPromises[chapter] = keysData[chapter];
 				} else {
 					chapterFetchPromises[chapter] = fetchChapterData({ chapter });
 				}
@@ -194,11 +199,11 @@
 
 			// Step 5: Map the original keys to the fetched data
 			relevantKeys.forEach((fullKey) => {
-				const [chapter, verse] = fullKey.split(':');
+				const chapter = fullKey.split(':')[0];
 				dataMap[fullKey] = fetchedDataMap[chapter][fullKey];
 			});
 		} catch (error) {
-			console.error('Error fetching chapter data:', error);
+			console.warn('Error fetching chapter data:', error);
 		} finally {
 			isLoading = false;
 		}
@@ -244,7 +249,7 @@
 
 		{#if showContinueReadingButton}
 			{#if endIndex < keysArrayLength && document.getElementById('loadVersesButton') === null}
-				<div id="loadVersesButton" class="flex justify-center pt-6 pb-18" use:inview={loadButtonOptions} on:inview_enter={(event) => document.querySelector('#loadVersesButton > button').click()}>
+				<div id="loadVersesButton" class="flex justify-center pt-6 pb-18" use:inview={loadButtonOptions} on:inview_enter={() => document.querySelector('#loadVersesButton > button').click()}>
 					<button on:click={loadNextVerses} class="text-sm {buttonClasses}"> Continue Reading </button>
 				</div>
 			{/if}

@@ -13,22 +13,16 @@
 	import QuranNavigationModal from '$ui/Modals/QuranNavigationModal.svelte';
 	import SiteNavigationModal from '$ui/Modals/SiteNavigationModal.svelte';
 	import SettingsSelectorModal from '$ui/Modals/SettingsSelectorModal.svelte';
-	// import ChangelogModal from '$ui/Modals/ChangelogModal.svelte';
 	import VerseTranslationModal from '$ui/Modals/VerseTranslationModal.svelte';
 	import MorphologyModal from '$ui/Modals/MorphologyModal.svelte';
 	import CopyShareVerseModal from '$ui/Modals/CopyShareVerseModal.svelte';
-	import DownloadModal from '$ui/Modals/DownloadModal.svelte';
 
-	import { __userSettings, __websiteOnline, __currentPage, __chapterNumber, __settingsDrawerHidden, __wakeLockEnabled, __userToken, __fontType, __wordTranslation, __verseTranslations, __mushafMinimalModeEnabled, __topNavbarVisible, __bottomToolbarVisible, __displayType } from '$utils/stores';
-	import { checkOldBookmarks } from '$utils/checkOldBookmarks';
+	import { __userSettings, __websiteOnline, __currentPage, __chapterNumber, __settingsDrawerHidden, __wakeLockEnabled, __fontType, __wordTranslation, __mushafMinimalModeEnabled, __topNavbarVisible, __bottomToolbarVisible, __displayType } from '$utils/stores';
 	import { debounce } from '$utils/debounce';
 	import { toggleNavbar } from '$utils/toggleNavbar';
 	import { resetAudioSettings } from '$utils/audioController';
 	import { updateSettings } from '$utils/updateSettings';
-	import { checkAndRegisterServiceWorker } from '$utils/serviceWorker';
-
-	// Function to check old bookmarks for v3 update
-	checkOldBookmarks();
+	// import { checkAndRegisterServiceWorker } from '$utils/serviceWorker';
 
 	const defaultPaddingTop = 'pt-16';
 	const defaultPaddingBottom = 'pb-8';
@@ -43,16 +37,6 @@
 
 	// Update body scroll based on settings drawer visibility
 	$: document.body.classList.toggle('overflow-y-hidden', !$__settingsDrawerHidden);
-
-	// Update settings from cloud when chapter or page changes
-	// $: if ($__currentPage && $__chapterNumber) {
-	// 	downloadSettingsFromCloud();
-	// }
-
-	// Reset chapter data loaded when certain settings update
-	$: if ($__currentPage || $__fontType || $__wordTranslation || $__verseTranslations) {
-		localStorage.setItem('chapterDataLoaded', false);
-	}
 
 	// Stop all audio when the page or chapter changes
 	$: if ($__currentPage || $__chapterNumber) {
@@ -78,8 +62,8 @@
 				try {
 					wakeLock = await navigator.wakeLock.request('screen');
 					console.log('Wake lock enabled');
-				} catch (err) {
-					console.error(err);
+				} catch (error) {
+					console.warn(error);
 				}
 			}
 		} else {
@@ -138,6 +122,22 @@
 		$__fontType = JSON.parse($__userSettings).displaySettings.fontType;
 	}
 
+	// Function to check old bookmarks for v3 update
+	(function checkOldBookmarks() {
+		const oldBookmarks = localStorage.getItem('bookmarks');
+
+		if (oldBookmarks) {
+			const bookmarkList = oldBookmarks.slice(0, -1).split('|');
+
+			bookmarkList.forEach((bookmark) => {
+				updateSettings({ type: 'userBookmarks', key: bookmark, oldCheck: true, set: true });
+			});
+
+			// remove the old bookmarks from localStorage as they're no longer needed
+			localStorage.removeItem('bookmarks');
+		}
+	})();
+
 	// Service Worker
 	// checkAndRegisterServiceWorker();
 </script>
@@ -146,12 +146,10 @@
 	<Navbar />
 	<SettingsDrawer />
 	<QuranNavigationModal />
-	<!-- <InitialSetupModal /> -->
 	<AudioModal />
 	<TajweedRulesModal />
 	<NotesModal />
-	<!-- <TokenModal /> -->
-	<DownloadModal />
+	<!-- <DownloadModal /> -->
 	<TafsirModal />
 	<SiteNavigationModal />
 	<SettingsSelectorModal />
