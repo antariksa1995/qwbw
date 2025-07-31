@@ -3,18 +3,11 @@
 	import { selectableWordTranslations, selectableWordTransliterations, selectableVerseTranslations, verseTranslationsLanguages } from '$data/options';
 	import { buttonClasses } from '$data/commonClasses';
 
-	// Example function placeholders
 	function getDownloadSize(version) {
-		// Replace with real size logic per version
 		return version === 4 ? '4.2 MB' : '2.3 MB';
 	}
 
-	function isUpToDate(version) {
-		// Replace with actual logic for update check
-		return true;
-	}
-
-	export const verseTranslationsMap = verseTranslationsLanguages.reduce((acc, item) => {
+	const verseTranslationsMap = verseTranslationsLanguages.reduce((acc, item) => {
 		acc[item.language_id] = { language: item.language };
 		return acc;
 	}, {});
@@ -33,7 +26,7 @@
 				<table class="table-auto w-full text-sm">
 					<thead class="text-xs uppercase top-0 {window.theme('bgSecondaryLight')}">
 						<tr>
-							<th class="text-left px-6 py-3 w-full">Language</th>
+							<th class="text-left px-6 py-3 w-full">Data Type</th>
 							<th class="text-left px-6 py-3 whitespace-nowrap min-w-[80px]">Size</th>
 							<th class="text-left px-6 py-3 whitespace-nowrap min-w-[100px]">Action</th>
 						</tr>
