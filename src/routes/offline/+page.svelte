@@ -1,10 +1,19 @@
 <script>
 	import { __currentPage } from '$utils/stores';
-	import { selectableWordTranslations, selectableWordTransliterations, selectableVerseTranslations, verseTranslationsLanguages } from '$data/options';
+	import { selectableFontTypes, selectableWordTranslations, selectableWordTransliterations, selectableVerseTranslations, verseTranslationsLanguages } from '$data/options';
 	import { buttonClasses } from '$data/commonClasses';
+	import { fetchWordData } from '$utils/fetchData';
 
 	function getDownloadSize(version) {
 		return version === 4 ? '4.2 MB' : '2.3 MB';
+	}
+
+	async function downloadData(type, id) {
+		if (type === 'wordTranslation') {
+			await fetchWordData(1, id, 1);
+		} else if (type === 'wordTransliteration') {
+			await fetchWordData(1, 1, id);
+		}
 	}
 
 	const verseTranslationsMap = verseTranslationsLanguages.reduce((acc, item) => {
@@ -19,6 +28,33 @@
 	<h1 class="text-2xl font-bold mb-6">Offline Data Download</h1>
 
 	<div class="space-y-4">
+		<!-- Quran font types -->
+		<div class="flex flex-col pb-8">
+			<div class="relative space-y-6 sm:rounded-3xl">
+				<h1 class="text-md md:text-2xl">Quran Font Types</h1>
+				<table class="table-auto w-full text-sm">
+					<thead class="text-xs uppercase top-0 {window.theme('bgSecondaryLight')}">
+						<tr>
+							<th class="text-left px-6 py-3 w-full">Data Type</th>
+							<th class="text-left px-6 py-3 whitespace-nowrap min-w-[80px]">Size</th>
+							<th class="text-left px-6 py-3 whitespace-nowrap min-w-[100px]">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each Object.entries(selectableFontTypes) as [id, item]}
+							<tr class="{window.theme('bgMain')} border-b {window.theme('border')} {window.theme('hover')}">
+								<td class="px-6 py-4 w-full">{item.type} - {item.font}</td>
+								<td class="px-6 py-4 whitespace-nowrap min-w-[80px]">{getDownloadSize(item.version)}</td>
+								<td class="px-6 py-4 whitespace-nowrap min-w-[100px]">
+									<button class={buttonClasses}>Install</button>
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
 		<!-- word translations -->
 		<div class="flex flex-col pb-8">
 			<div class="relative space-y-6 sm:rounded-3xl">
@@ -37,7 +73,7 @@
 								<td class="px-6 py-4 w-full">{item.language}</td>
 								<td class="px-6 py-4 whitespace-nowrap min-w-[80px]">{getDownloadSize(item.version)}</td>
 								<td class="px-6 py-4 whitespace-nowrap min-w-[100px]">
-									<button class={buttonClasses}>Install</button>
+									<button class={buttonClasses} on:click={() => downloadData('wordTranslation', id)}>Install</button>
 								</td>
 							</tr>
 						{/each}
@@ -64,7 +100,7 @@
 								<td class="px-6 py-4 w-full">{item.language}</td>
 								<td class="px-6 py-4 whitespace-nowrap min-w-[80px]">{getDownloadSize(item.version)}</td>
 								<td class="px-6 py-4 whitespace-nowrap min-w-[100px]">
-									<button class={buttonClasses}>Install</button>
+									<button class={buttonClasses} on:click={() => downloadData('wordTransliteration', id)}>Install</button>
 								</td>
 							</tr>
 						{/each}
