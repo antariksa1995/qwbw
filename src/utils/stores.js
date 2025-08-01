@@ -60,7 +60,8 @@ let __websiteOnline,
 	__mushafMinimalModeEnabled,
 	__keysToFetch,
 	__wordMorphologyOnClick,
-	__homepageExtrasPanelVisible;
+	__homepageExtrasPanelVisible,
+	__offlineDataInformation;
 
 if (browser) {
 	const userSettings = JSON.parse(localStorage.getItem('userSettings'));
@@ -223,6 +224,9 @@ if (browser) {
 
 	// visibiliy of the extras panel on homepage (bookmarks, notes, etc...)
 	__homepageExtrasPanelVisible = writable(userSettings.displaySettings.homepageExtrasPanelVisible);
+
+	// to store the information related to offline downloaded data
+	__offlineDataInformation = writable(userSettings.offlineDataInformation);
 }
 
 export {
@@ -285,5 +289,6 @@ export {
 	__mushafMinimalModeEnabled,
 	__keysToFetch,
 	__wordMorphologyOnClick,
-	__homepageExtrasPanelVisible
+	__homepageExtrasPanelVisible,
+	__offlineDataInformation
 };

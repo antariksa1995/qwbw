@@ -1,19 +1,52 @@
 <script>
-	import { __currentPage } from '$utils/stores';
+	import { __currentPage, __offlineDataInformation } from '$utils/stores';
 	import { selectableFontTypes, selectableWordTranslations, selectableWordTransliterations, selectableVerseTranslations, verseTranslationsLanguages } from '$data/options';
-	import { buttonClasses } from '$data/commonClasses';
+	import { buttonClasses, disabledClasses } from '$data/commonClasses';
 	import { fetchWordData } from '$utils/fetchData';
+	import { updateSettings } from '$utils/updateSettings';
+
+	let downloadInProcess = false;
 
 	function getDownloadSize(version) {
 		return version === 4 ? '4.2 MB' : '2.3 MB';
 	}
 
 	async function downloadData(type, id) {
-		if (type === 'wordTranslation') {
+		downloadInProcess = true;
+
+		await new Promise((r) => setTimeout(r, Math.floor(Math.random() * 10001) + 5000));
+
+		const offlineData = __offlineDataInformation;
+		let version = 0;
+
+		id = Number(id);
+
+		// Trigger the appropriate download
+		if (type === 'fontType' && selectableFontTypes[id]) {
+			await fetchWordData(id, 1, 1);
+			version = Number(selectableFontTypes[id].version);
+		} else if (type === 'wordTranslation' && selectableWordTranslations[id]) {
 			await fetchWordData(1, id, 1);
-		} else if (type === 'wordTransliteration') {
+			version = Number(selectableWordTranslations[id].version);
+		} else if (type === 'wordTransliteration' && selectableWordTransliterations[id]) {
 			await fetchWordData(1, 1, id);
+			version = Number(selectableWordTransliterations[id].version);
 		}
+
+		const timestamp = Date.now();
+
+		// Ensure the type key exists
+		if (!offlineData[type]) {
+			offlineData[type] = {};
+		}
+
+		offlineData[type][id] = { id, version, timestamp };
+
+		__offlineDataInformation.set(offlineData);
+
+		updateSettings({ type: 'offlineDataInformation', value: $__offlineDataInformation });
+
+		downloadInProcess = false;
 	}
 
 	const verseTranslationsMap = verseTranslationsLanguages.reduce((acc, item) => {
@@ -45,8 +78,8 @@
 							<tr class="{window.theme('bgMain')} border-b {window.theme('border')} {window.theme('hover')}">
 								<td class="px-6 py-4 w-full">{item.type} - {item.font}</td>
 								<td class="px-6 py-4 whitespace-nowrap min-w-[80px]">{getDownloadSize(item.version)}</td>
-								<td class="px-6 py-4 whitespace-nowrap min-w-[100px]">
-									<button class={buttonClasses}>Install</button>
+								<td class="px-6 py-4 whitespace-nowrap min-w-[100px] {downloadInProcess && disabledClasses}">
+									<button id="fontType-{id}" class={buttonClasses} on:click={() => downloadData('fontType', id)}>Install</button>
 								</td>
 							</tr>
 						{/each}
@@ -72,8 +105,8 @@
 							<tr class="{window.theme('bgMain')} border-b {window.theme('border')} {window.theme('hover')}">
 								<td class="px-6 py-4 w-full">{item.language}</td>
 								<td class="px-6 py-4 whitespace-nowrap min-w-[80px]">{getDownloadSize(item.version)}</td>
-								<td class="px-6 py-4 whitespace-nowrap min-w-[100px]">
-									<button class={buttonClasses} on:click={() => downloadData('wordTranslation', id)}>Install</button>
+								<td class="px-6 py-4 whitespace-nowrap min-w-[100px] {downloadInProcess && disabledClasses}">
+									<button id="wordTranslation-{id}" class={buttonClasses} on:click={() => downloadData('wordTranslation', id)}>Install</button>
 								</td>
 							</tr>
 						{/each}
@@ -99,8 +132,8 @@
 							<tr class="{window.theme('bgMain')} border-b {window.theme('border')} {window.theme('hover')}">
 								<td class="px-6 py-4 w-full">{item.language}</td>
 								<td class="px-6 py-4 whitespace-nowrap min-w-[80px]">{getDownloadSize(item.version)}</td>
-								<td class="px-6 py-4 whitespace-nowrap min-w-[100px]">
-									<button class={buttonClasses} on:click={() => downloadData('wordTransliteration', id)}>Install</button>
+								<td class="px-6 py-4 whitespace-nowrap min-w-[100px] {downloadInProcess && disabledClasses}">
+									<button id="wordTransliteration-{id}" class={buttonClasses} on:click={() => downloadData('wordTransliteration', id)}>Install</button>
 								</td>
 							</tr>
 						{/each}
@@ -126,8 +159,8 @@
 							<tr class="{window.theme('bgMain')} border-b {window.theme('border')} {window.theme('hover')}">
 								<td class="px-6 py-4 w-full">{verseTranslationsMap[item.language_id].language} - {item.resource_name}</td>
 								<td class="px-6 py-4 whitespace-nowrap min-w-[80px]">{getDownloadSize(item.version)}</td>
-								<td class="px-6 py-4 whitespace-nowrap min-w-[100px]">
-									<button class={buttonClasses}>Install</button>
+								<td class="px-6 py-4 whitespace-nowrap min-w-[100px] {downloadInProcess && disabledClasses}">
+									<button id="verseTranslation-{id}" class={buttonClasses}>Install</button>
 								</td>
 							</tr>
 						{/each}
