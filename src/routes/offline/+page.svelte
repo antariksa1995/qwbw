@@ -11,12 +11,13 @@
 		return version === 4 ? '4.2 MB' : '2.3 MB';
 	}
 
+	$: offlineData = $__offlineDataInformation;
+
 	async function downloadData(type, id) {
 		downloadInProcess = true;
 
-		await new Promise((r) => setTimeout(r, Math.floor(Math.random() * 10001) + 5000));
+		// await new Promise((r) => setTimeout(r, Math.floor(Math.random() * 10001) + 5000));
 
-		const offlineData = __offlineDataInformation;
 		let version = 0;
 
 		id = Number(id);
@@ -58,7 +59,7 @@
 </script>
 
 <div class="max-w-4xl mx-auto">
-	<h1 class="text-2xl font-bold mb-6">Offline Data Download</h1>
+	<!-- <h1 class="text-2xl font-bold mb-6">Offline Data Download</h1> -->
 
 	<div class="space-y-4">
 		<!-- Quran font types -->
@@ -68,18 +69,33 @@
 				<table class="table-auto w-full text-sm">
 					<thead class="text-xs uppercase top-0 {window.theme('bgSecondaryLight')}">
 						<tr>
-							<th class="text-left px-6 py-3 w-full">Data Type</th>
-							<th class="text-left px-6 py-3 whitespace-nowrap min-w-[80px]">Size</th>
-							<th class="text-left px-6 py-3 whitespace-nowrap min-w-[100px]">Action</th>
+							<th class="text-left py-3 w-full">Data Type</th>
+							<!-- <th class="text-left py-3 whitespace-nowrap min-w-[80px]">Size</th> -->
+							<th class="text-left py-3 whitespace-nowrap min-w-[80px]">Status</th>
+							<th class="text-left py-3 whitespace-nowrap min-w-[100px]">Action</th>
 						</tr>
 					</thead>
 					<tbody>
 						{#each Object.entries(selectableFontTypes) as [id, item]}
+							{@const dataObject = offlineData.fontType}
 							<tr class="{window.theme('bgMain')} border-b {window.theme('border')} {window.theme('hover')}">
-								<td class="px-6 py-4 w-full">{item.type} - {item.font}</td>
-								<td class="px-6 py-4 whitespace-nowrap min-w-[80px]">{getDownloadSize(item.version)}</td>
-								<td class="px-6 py-4 whitespace-nowrap min-w-[100px] {downloadInProcess && disabledClasses}">
-									<button id="fontType-{id}" class={buttonClasses} on:click={() => downloadData('fontType', id)}>Install</button>
+								<td class="py-4 w-full">{item.type} - {item.font}</td>
+								<!-- <td class="py-4 whitespace-nowrap min-w-[80px]">{getDownloadSize(item.version)}</td> -->
+								<td class="py-4 whitespace-nowrap min-w-[80px]">
+									{#if dataObject && dataObject.hasOwnProperty(id)}
+										Up-to-date
+									{:else}
+										-
+									{/if}
+								</td>
+								<td class="py-4 whitespace-nowrap min-w-[100px] {downloadInProcess && disabledClasses}">
+									<button id="fontType-{id}" class={buttonClasses} on:click={() => downloadData('fontType', id)}>
+										{#if dataObject && dataObject.hasOwnProperty(id)}
+											Re-Install
+										{:else}
+											Install
+										{/if}
+									</button>
 								</td>
 							</tr>
 						{/each}
@@ -89,7 +105,7 @@
 		</div>
 
 		<!-- word translations -->
-		<div class="flex flex-col pb-8">
+		<!-- <div class="flex flex-col pb-8">
 			<div class="relative space-y-6 sm:rounded-3xl">
 				<h1 class="text-md md:text-2xl">Word Translations</h1>
 				<table class="table-auto w-full text-sm">
@@ -113,10 +129,10 @@
 					</tbody>
 				</table>
 			</div>
-		</div>
+		</div> -->
 
 		<!-- word transliterations -->
-		<div class="flex flex-col pb-8">
+		<!-- <div class="flex flex-col pb-8">
 			<div class="relative space-y-6 sm:rounded-3xl">
 				<h1 class="text-md md:text-2xl">Word Transliterations</h1>
 				<table class="w-full text-sm text-left rtl:text-right rounded-md table-auto">
@@ -140,10 +156,10 @@
 					</tbody>
 				</table>
 			</div>
-		</div>
+		</div> -->
 
 		<!-- verse translations/transliterations -->
-		<div class="flex flex-col pb-8">
+		<!-- <div class="flex flex-col pb-8">
 			<div class="relative space-y-6 sm:rounded-3xl">
 				<h1 class="text-md md:text-2xl">Verse Translations/Transliterations</h1>
 				<table class="w-full text-sm text-left rtl:text-right rounded-md table-auto">
@@ -167,6 +183,6 @@
 					</tbody>
 				</table>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </div>
