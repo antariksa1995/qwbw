@@ -589,3 +589,8 @@ svg {
 .theme-9 .markdown hr { @apply border-[#dca54c]/20; } /* Dark Luxury */
 .theme-9 .markdown a { @apply text-[#dca54c]; } /* Dark Luxury */
 .theme-9 .markdown h3 { @apply text-[#dca54c]; } /* Dark Luxury */
+
+
+.with-invisible-dot::first-letter {
+    visibility: hidden;
+  }

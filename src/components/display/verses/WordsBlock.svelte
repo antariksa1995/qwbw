@@ -166,7 +166,7 @@
 						{#if Object.prototype.hasOwnProperty.call(fixedMushafWords, wordKey)}
 							{fixedMushafWords[wordKey]}
 						{:else}
-							{arabicWords[word]}
+							<span>{@html '&nbsp;&nbsp;&nbsp;' + arabicWords[word] + '&nbsp;&nbsp;&nbsp;'}</span>
 						{/if}
 					</span>
 				{/if}
