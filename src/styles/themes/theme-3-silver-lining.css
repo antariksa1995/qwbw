@@ -1,0 +1,31 @@
+/* Theme 3 - Silver Lining */
+/* Minimal theme mappings for icon palettes only */
+
+[data-theme="silver-lining"] {
+	--color-accent-primary: 0, 0, 0;           /* #000000 */
+	--color-accent-secondary: 0, 0, 0;         /* #000000 */
+	--color-text-primary: 0, 0, 0;             /* #000000 */
+	--color-text-secondary: 0, 0, 0;           /* #000000 */
+}
+
+/* Font Palettes - Support both old and new selectors */
+.theme-3 .colored-fonts,
+[data-theme="silver-lining"] .colored-fonts { 
+	font-palette: --palette3; 
+}
+.theme-3 .theme-palette-normal,
+[data-theme="silver-lining"] .theme-palette-normal { 
+	font-palette: --palette5; 
+}
+.theme-3 .theme-palette-tajweed,
+[data-theme="silver-lining"] .theme-palette-tajweed { 
+	font-palette: --palette2; 
+}
+.theme-3 .header,
+[data-theme="silver-lining"] .header { 
+	font-palette: --palette3; 
+}
+
+/* Scrollbar color */
+html.theme-3,
+[data-theme="silver-lining"] { scrollbar-color: rgb(var(--color-accent-secondary)) transparent; scrollbar-width: thin; }

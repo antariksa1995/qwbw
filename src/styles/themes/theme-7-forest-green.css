@@ -1,0 +1,31 @@
+/* Theme 7 - Forest Green */
+/* Minimal theme mappings for icon palettes only */
+
+[data-theme="forest-green"] {
+	--color-accent-primary: 221, 221, 221;     /* #dddddd */
+	--color-accent-secondary: 221, 221, 221;   /* #dddddd */
+	--color-text-primary: 221, 221, 221;       /* #dddddd */
+	--color-text-secondary: 221, 221, 221;     /* #dddddd */
+}
+
+/* Font Palettes - Support both old and new selectors */
+.theme-7 .colored-fonts,
+[data-theme="forest-green"] .colored-fonts { 
+	font-palette: --palette1; 
+}
+.theme-7 .theme-palette-normal,
+[data-theme="forest-green"] .theme-palette-normal { 
+	font-palette: --palette4; 
+}
+.theme-7 .theme-palette-tajweed,
+[data-theme="forest-green"] .theme-palette-tajweed { 
+	font-palette: --palette1; 
+}
+.theme-7 .header,
+[data-theme="forest-green"] .header { 
+	font-palette: --palette1; 
+}
+
+/* Scrollbar color */
+html.theme-7,
+[data-theme="forest-green"] { scrollbar-color: rgb(var(--color-accent-secondary)) transparent; scrollbar-width: thin; }

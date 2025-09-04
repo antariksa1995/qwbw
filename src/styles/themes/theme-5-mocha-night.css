@@ -1,0 +1,36 @@
+/* Theme 5 - Mocha Night */
+/* Minimal theme mappings for icon palettes only */
+
+[data-theme="mocha-night"] {
+	--color-accent-primary: 220, 165, 76;      /* #dca54c */
+	--color-accent-secondary: 220, 165, 76;    /* #dca54c */
+	--color-text-primary: 220, 165, 76;        /* #dca54c */
+	--color-text-secondary: 220, 165, 76;      /* #dca54c */
+}
+
+/* Font Palettes - Support both old and new selectors */
+.theme-5 .colored-fonts,
+[data-theme="mocha-night"] .colored-fonts { 
+	font-palette: --palette5; 
+}
+.theme-5 .theme-palette-normal,
+[data-theme="mocha-night"] .theme-palette-normal { 
+	font-palette: --palette4; 
+}
+.theme-5 .theme-palette-tajweed,
+[data-theme="mocha-night"] .theme-palette-tajweed { 
+	font-palette: --palette1; 
+}
+.theme-5 .header,
+[data-theme="mocha-night"] .header { 
+	font-palette: --palette5; 
+}
+
+.theme-5 .colored-bismillah,
+[data-theme="mocha-night"] .colored-bismillah { 
+	font-palette: --MochaNightBismillahColor; 
+}
+
+/* Scrollbar color */
+html.theme-5,
+[data-theme="mocha-night"] { scrollbar-color: rgb(var(--color-accent-secondary)) transparent; scrollbar-width: thin; }
